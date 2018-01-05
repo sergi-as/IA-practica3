@@ -11,7 +11,7 @@ args=parser.parse_args()
 ext=args.version
 hab=args.habitaciones
 res=args.reservas
-file = open('RandomInstaceExt'+str(ext)+".pddl", 'w+')
+file = open('RandomInstanceExt'+str(ext)+".pddl", 'w+')
 #head
 head="\
 (define (problem basic)\n\
@@ -31,6 +31,9 @@ for i in range (1,hab+1):
     init+="\
         (= (idhab h"+str(i)+") "+str(i)+")\n\
         (= (capacidad h"+str(i)+") "+str(random.randint(1,4))+")\n"
+    if ext is 2:
+        init+="\
+        (= (orienthab h"+str(i)+") "+str(random.randint(0,4))+")\n"
     #reservas
 for i in range(1,res+1):
     init+="\n\
@@ -45,8 +48,11 @@ for i in range(1,res+1):
     init+="\
         (= (dini r"+str(i)+") "+str(ini)+")\n\
         (= (dfi r"+str(i)+") "+str(fi)+")\n"
+    if ext is 2:
+        init+="\
+        (= (orientres r"+str(i)+") "+str(random.randint(0,4))+")\n"
 init+="\
-    (= (nassig) 0)\n\
+    (= (coste) 0)\n\
       )\n"
 #tail
 tail="\
@@ -63,9 +69,9 @@ tail="\
     ))\n\
     )\n\
   )\n\
-  (:metric minimize (nassig))\n\
+  (:metric minimize (coste))\n\
 )\n"
 
 
 file.write(head+objects+init+tail)
-print('Archivo "RandomInstaceExt'+str(ext)+'.pddl" creado con exito')
+print('Archivo "RandomInstanceExt'+str(ext)+'.pddl" creado con exito')
