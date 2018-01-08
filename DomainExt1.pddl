@@ -11,16 +11,18 @@
     (dini ?x - reserva)
     (dfi ?x - reserva)
     ;para optimizar
-    (nassig)
+    (coste)
   )
   (:predicates
     (assignacion ?x - reserva ?y - habitacion)
     ;para indicar que falta por asignar una reserva
     (pendiente ?x - reserva)
   )
-  (:action descarta :parameters (?x - reserva ?y - habitacion)
-    :precondition (and ( assignacion ?x ?y) (not (pendiente ?x)))
-    :effect (and (increase (nassig) 2)(pendiente ?x) (not (assignacion ?x ?y)))
+  (:action descarta :parameters (?x - reserva )
+    :precondition (pendiente ?x)
+    ;increase cubico con los dias de la reserva
+    :effect (and (not (pendiente ?x))
+     (increase (coste) (* (* (- (dfi ?x) (dini ?x) ) (- (dfi ?x) (dini ?x))) (- (dfi ?x) (dini ?x) ) ))  )
   )
   (:action asigna :parameters (?x - reserva ?y - habitacion)
     :precondition (and
@@ -32,7 +34,9 @@
           )
         )
       )
-    :effect ( and (increase (nassig) (* (- (dfi ?x) (dini ?x) ) (- (dfi ?x) (dini ?x)))) ( assignacion ?x ?y) (not (pendiente ?x)))
+      ;increase cuadratico con el numero de dias de la reserva
+    :effect ( and ( assignacion ?x ?y) (not (pendiente ?x))
+      ( increase (coste) (* (- (dfi ?x) (dini ?x) ) (- (dfi ?x) (dini ?x)))) )
   )
 
 )

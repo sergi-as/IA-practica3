@@ -3,9 +3,10 @@ import random
 import argparse
 
 parser = argparse.ArgumentParser(description='Genera juegos de prueba al azar')
-parser.add_argument('version', metavar='version', type=int, help='Numero de extension')
+parser.add_argument('version', metavar='version', type=int, choices=range(0,5), help='Numero de extension de 0 a 4')
 parser.add_argument('habitaciones', metavar='habitaciones', type=int, help='Numero de habitaciones')
-parser.add_argument('reservas', metavar='reservas', type=int, help='Numero de rservas')
+parser.add_argument('reservas', metavar='reservas', type=int, help='Numero de reservas')
+
 args=parser.parse_args()
 
 ext=args.version
@@ -40,37 +41,40 @@ for i in range(1,res+1):
         (pendiente r"+str(i)+")\n\
         (= (idres r"+str(i)+") "+str(i)+")\n\
         (= (npers r"+str(i)+") "+str(random.randint(1,4))+")\n"
-    ini=random.randint(1,29)
-    if ini<=20:
-        fi=random.randint(ini,ini+10)
+    r1=random.randint(1,30)
+    r2=random.randint(1,30)
+    if r1<r2:
+        ini=r1
+        fi=r2
     else:
-        fi=random.randint(ini,30)
+        ini=r2
+        fi=r1
     init+="\
         (= (dini r"+str(i)+") "+str(ini)+")\n\
         (= (dfi r"+str(i)+") "+str(fi)+")\n"
     if ext is 2:
         init+="\
         (= (orientres r"+str(i)+") "+str(random.randint(0,4))+")\n"
+if ext is not 0:
+    init+="        (= (coste) 0)\n"
+if ext is 3:
+    init+="    (= (nplazas) 0)\n"
+
 init+="\
-    (= (coste) 0)\n\
       )\n"
 #tail
 tail="\
   (:goal\n\
-    (forall (?x - reserva ?y - habitacion)\n\
-    (not (and\n\
-      (pendiente ?x)\n\
-      (<= (npers ?x) (capacidad ?y))\n\
-      (forall (?z - reserva)\n\
-        (or (not(assignacion ?z ?y))\n\
-          (or (> (dini ?z) (dfi ?x)) (> (dini ?x) (dfi ?z)))\n\
-        )\n\
-      )\n\
-    ))\n\
+    (forall (?x - reserva )\n\
+        (not(pendiente ?x))\n\
     )\n\
-  )\n\
-  (:metric minimize (coste))\n\
-)\n"
+  )\n"
+if ext in [1,2]:
+  tail+="  (:metric minimize (coste))\n"
+if ext is 3:
+  tail+="  (:metric minimize (+(* 10 (nplazas))(coste)))\n"
+
+tail+=")\n"
 
 
 file.write(head+objects+init+tail)

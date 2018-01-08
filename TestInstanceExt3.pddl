@@ -43,8 +43,8 @@
     (pendiente r4)
     (pendiente r5)
     ;
-    (= (nassig) 0)
-(= (nplazas) 0)
+    (= (coste) 0)
+    (= (nplazas) 0)
   )
   (:goal
     (forall (?x - reserva ?y - habitacion)
@@ -59,5 +59,5 @@
     ))
     )
   )
-  (:metric minimize (+(* 10 (nplazas))(nassig)))
+  (:metric minimize (+(* 10 (nplazas))(coste)))
 )
