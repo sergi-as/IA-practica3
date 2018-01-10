@@ -52,6 +52,6 @@
 
   (:action valorahab :parameters (?y - habitacion )
     :precondition (pendientehab ?y)
-    :effect (increase (nhab) 1)
+    :effect (and (increase (nhab) 1) (not (pendientehab ?y)))
   )
 )
