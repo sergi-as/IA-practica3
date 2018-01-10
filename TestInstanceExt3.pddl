@@ -47,16 +47,8 @@
     (= (nplazas) 0)
   )
   (:goal
-    (forall (?x - reserva ?y - habitacion)
-    (not (and
-      (pendiente ?x)
-      (<= (npers ?x) (capacidad ?y))
-      (forall (?z - reserva)
-        (or (not(assignacion ?z ?y))
-          (or (> (dini ?z) (dfi ?x)) (> (dini ?x) (dfi ?z)))
-        )
-      )
-    ))
+    (forall (?x - reserva )
+     (not (pendiente ?x))
     )
   )
   (:metric minimize (+(* 10 (nplazas))(coste)))
