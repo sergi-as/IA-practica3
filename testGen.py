@@ -56,9 +56,11 @@ for i in range(1,res+1):
         init+="\
         (= (orientres r"+str(i)+") "+str(random.randint(0,4))+")\n"
 if ext is not 0:
-    init+="        (= (coste) 0)\n"
-if ext is 3:
-    init+="    (= (nplazas) 0)\n"
+    init+="\n        (= (coste) 0)\n"
+if ext in [3,4]:
+    init+="        (= (nplazas) 0)\n"
+if ext is 4:
+    init+="        (= (nhab) 0)\n"
 
 init+="\
       )\n"
@@ -71,8 +73,11 @@ tail="\
   )\n"
 if ext in [1,2]:
   tail+="  (:metric minimize (coste))\n"
-if ext is 3:
+elif ext is 3:
   tail+="  (:metric minimize (+(* 10 (nplazas))(coste)))\n"
+elif ext is 4:
+  tail+="  (:metric minimize (+ (+(* 10 (nplazas)) (* 100 (nhab)) )(coste)) )\n"
+
 
 tail+=")\n"
 
